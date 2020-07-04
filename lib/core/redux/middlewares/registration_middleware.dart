@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_redux_complete/core/controller/api_controller.dart';
 import 'package:flutter_redux_complete/core/navigation/navigation_destinations.dart';
 import 'package:flutter_redux_complete/core/redux/actions/navigation/navigation_actions.dart';
@@ -8,12 +9,19 @@ import 'package:redux/redux.dart';
 /// This middleware will intercept every action related to the Navigation actions.
 class RegistrationMiddleware implements MiddlewareClass<AppState> {
 
-  ApiController apiController;
+  final ApiController apiController;
+
+  RegistrationMiddleware({
+     @required
+     this.apiController
+  });
 
   @override
   call(Store<AppState> store, action, next) {
     if (action is SubmitAction) {
       _handleSubmitAction(store, action);
+    } else if (action is RegistrationSuccessAction) {
+      _handleRegistrationSuccess(store, action);
     }
 
     // Make sure to forward actions to the next middleware in the chain!
@@ -33,21 +41,27 @@ class RegistrationMiddleware implements MiddlewareClass<AppState> {
 
     apiController.callApi(
       onSuccess: () {
-        store.dispatch(NavigateBackAction());
-        store.dispatch(
-            ShowDialogAction(
-                destination: SuccessDialogDestination(
-                    title: "Success!",
-                    msg: "Register Success",
-                    onButtonClick: () {
-                      store.dispatch(
-                          NavigateToNextAndReplaceAction(destination: CompletedPageDestination())
-                      );
-                    }
-                )
-            )
-        );
+        store.dispatch(RegistrationSuccessAction());
       }
+    );
+  }
+
+  Future<void> _handleRegistrationSuccess(
+      Store<AppState> store, RegistrationSuccessAction action) async {
+
+    store.dispatch(NavigateBackAction());
+    store.dispatch(
+        ShowDialogAction(
+            destination: SuccessDialogDestination(
+                title: "Success!",
+                msg: "Register Success",
+                onButtonClick: () {
+                  store.dispatch(
+                      NavigateToNextAndReplaceAction(destination: CompletedPageDestination())
+                  );
+                }
+            )
+        )
     );
   }
 

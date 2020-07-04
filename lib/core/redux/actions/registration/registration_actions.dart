@@ -16,3 +16,5 @@ class SubmitAction {
     this.username
   });
 }
+
+class RegistrationSuccessAction {}

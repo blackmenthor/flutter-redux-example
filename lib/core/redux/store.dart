@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_redux_complete/core/controller/api_controller.dart';
 import 'package:flutter_redux_complete/core/redux/middlewares/common_middleware.dart';
 import 'package:flutter_redux_complete/core/redux/middlewares/navigation_middleware.dart';
 import 'package:flutter_redux_complete/core/redux/middlewares/registration_middleware.dart';
@@ -11,13 +12,15 @@ class AppStore {
   static Store<AppState> createStore(
     GlobalKey<NavigatorState> navigatorKey,
   ) {
+    ApiController apiController = ApiController();
+
     return Store<AppState>(
       Reducer.reduce,
       initialState: AppState(),
       middleware: [
         CommonMiddleware(),
         NavigationMiddleware(navigatorKey: navigatorKey),
-        RegistrationMiddleware()
+        RegistrationMiddleware(apiController: apiController)
       ],
     );
   }
