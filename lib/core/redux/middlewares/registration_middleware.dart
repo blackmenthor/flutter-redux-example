@@ -1,3 +1,4 @@
+import 'package:flutter_redux_complete/core/controller/api_controller.dart';
 import 'package:flutter_redux_complete/core/navigation/navigation_destinations.dart';
 import 'package:flutter_redux_complete/core/redux/actions/navigation/navigation_actions.dart';
 import 'package:flutter_redux_complete/core/redux/actions/registration/registration_actions.dart';
@@ -6,6 +7,8 @@ import 'package:redux/redux.dart';
 
 /// This middleware will intercept every action related to the Navigation actions.
 class RegistrationMiddleware implements MiddlewareClass<AppState> {
+
+  ApiController apiController;
 
   @override
   call(Store<AppState> store, action, next) {
@@ -28,24 +31,23 @@ class RegistrationMiddleware implements MiddlewareClass<AppState> {
       )
     );
 
-    Future.delayed(
-      Duration(seconds: 3),
-        () {
+    apiController.callApi(
+      onSuccess: () {
         store.dispatch(NavigateBackAction());
-          store.dispatch(
+        store.dispatch(
             ShowDialogAction(
-              destination: SuccessDialogDestination(
-                title: "Success!",
-                msg: "Register Success",
-                onButtonClick: () {
-                  store.dispatch(
-                      NavigateToNextAndReplaceAction(destination: CompletedPageDestination())
-                  );
-                }
-              )
+                destination: SuccessDialogDestination(
+                    title: "Success!",
+                    msg: "Register Success",
+                    onButtonClick: () {
+                      store.dispatch(
+                          NavigateToNextAndReplaceAction(destination: CompletedPageDestination())
+                      );
+                    }
+                )
             )
-          );
-        }
+        );
+      }
     );
   }
 
