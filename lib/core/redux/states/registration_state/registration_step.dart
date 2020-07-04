@@ -1,0 +1,4 @@
+enum RegistrationStep {
+  FIRST,
+  LAST
+}
