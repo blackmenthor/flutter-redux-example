@@ -49,6 +49,7 @@ class RegistrationMiddleware implements MiddlewareClass<AppState> {
   Future<void> _handleRegistrationSuccess(
       Store<AppState> store, RegistrationSuccessAction action) async {
 
+    // close loading dialog
     store.dispatch(NavigateBackAction());
     store.dispatch(
         ShowDialogAction(
